@@ -1,7 +1,32 @@
 version: 2
 
 sources:
+  - name: localBike
+    database: databird-462909
+    schema: localBike
+    description: "Base de données Local Bike - Système de gestion de magasins de vélos"
     tables:
+      - name: stores
+        description: "Magasins Local Bike"
+        columns:
+          - name: store_id
+            description: "Identifiant unique du magasin"
+            tests:
+              - unique
+              - not_null
+          - name: store_name
+            description: "Nom du magasin"
+            tests:
+              - not_null
+          - name: city
+            description: "Ville du magasin"
+            tests:
+              - not_null
+          - name: state
+            description: "État/Province du magasin"
+            tests:
+              - not_null
+      
       - name: orders
         description: "Commandes clients"
         columns:
@@ -11,32 +36,218 @@ sources:
               - unique
               - not_null
           - name: customer_id
+            description: "Identifiant du client"
             tests:
               - not_null
           - name: order_date
+            description: "Date de la commande"
             tests:
               - not_null
+          - name: store_id
+            description: "Identifiant du magasin"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'stores')
+                  field: store_id
+          - name: order_status
+            description: "Statut de la commande"
+            tests:
+              - accepted_values:
+                  values: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
       
       - name: order_items
         description: "Détail des articles commandés"
+        columns:
+          - name: order_id
+            description: "Identifiant de la commande"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'orders')
+                  field: order_id
+          - name: item_id
+            description: "Identifiant de l'article dans la commande"
+            tests:
+              - not_null
+          - name: product_id
+            description: "Identifiant du produit"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'products')
+                  field: product_id
+          - name: quantity
+            description: "Quantité commandée"
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 1
+          - name: list_price
+            description: "Prix unitaire"
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
+          - name: discount
+            description: "Taux de remise (0-1)"
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
+                  max_value: 1
         
       - name: customers
         description: "Informations clients"
+        columns:
+          - name: customer_id
+            description: "Identifiant unique du client"
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            description: "Prénom du client"
+            tests:
+              - not_null
+          - name: last_name
+            description: "Nom du client"
+            tests:
+              - not_null
+          - name: email
+            description: "Email du client"
+            tests:
+              - unique
+              - not_null
+          - name: city
+            description: "Ville du client"
+          - name: state
+            description: "État/Province du client"
         
       - name: products
         description: "Catalogue produits"
-        
-      - name: stores
-        description: "Magasins Local Bike"
+        columns:
+          - name: product_id
+            description: "Identifiant unique du produit"
+            tests:
+              - unique
+              - not_null
+          - name: product_name
+            description: "Nom du produit"
+            tests:
+              - not_null
+          - name: brand_id
+            description: "Identifiant de la marque"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'brands')
+                  field: brand_id
+          - name: category_id
+            description: "Identifiant de la catégorie"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'categories')
+                  field: category_id
+          - name: model_year
+            description: "Année du modèle"
+            tests:
+              - not_null
+          - name: list_price
+            description: "Prix de vente conseillé"
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
         
       - name: staffs
         description: "Personnel des magasins"
+        columns:
+          - name: staff_id
+            description: "Identifiant unique du personnel"
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            description: "Prénom de l'employé"
+            tests:
+              - not_null
+          - name: last_name
+            description: "Nom de l'employé"
+            tests:
+              - not_null
+          - name: email
+            description: "Email de l'employé"
+            tests:
+              - unique
+              - not_null
+          - name: store_id
+            description: "Identifiant du magasin"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'stores')
+                  field: store_id
+          - name: active
+            description: "Statut actif de l'employé"
+            tests:
+              - accepted_values:
+                  values: [0, 1]
         
       - name: stocks
         description: "Niveaux de stock par magasin"
+        columns:
+          - name: store_id
+            description: "Identifiant du magasin"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'stores')
+                  field: store_id
+          - name: product_id
+            description: "Identifiant du produit"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('localBike', 'products')
+                  field: product_id
+          - name: quantity
+            description: "Quantité en stock"
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
         
       - name: brands
         description: "Marques de vélos"
+        columns:
+          - name: brand_id
+            description: "Identifiant unique de la marque"
+            tests:
+              - unique
+              - not_null
+          - name: brand_name
+            description: "Nom de la marque"
+            tests:
+              - unique
+              - not_null
         
       - name: categories
         description: "Catégories de produits"
+        columns:
+          - name: category_id
+            description: "Identifiant unique de la catégorie"
+            tests:
+              - unique
+              - not_null
+          - name: category_name
+            description: "Nom de la catégorie"
+            tests:
+              - unique
+              - not_null
+
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    
+    loaded_at_field: _etl_loaded_at
