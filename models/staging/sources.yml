@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Données brutes Local Bike depuis BigQuery"
+    database: ton-projet-id  # Remplace par ton project ID
+    schema: local_bike_raw   # Nom de ton dataset BigQuery
+    
+    tables:
+      - name: orders
+        description: "Commandes clients"
+        columns:
+          - name: order_id
+            description: "Identifiant unique de la commande"
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+          - name: order_date
+            tests:
+              - not_null
+      
+      - name: order_items
+        description: "Détail des articles commandés"
+        
+      - name: customers
+        description: "Informations clients"
+        
+      - name: products
+        description: "Catalogue produits"
+        
+      - name: stores
+        description: "Magasins Local Bike"
+        
+      - name: staffs
+        description: "Personnel des magasins"
+        
+      - name: stocks
+        description: "Niveaux de stock par magasin"
+        
+      - name: brands
+        description: "Marques de vélos"
+        
+      - name: categories
+        description: "Catégories de produits"
