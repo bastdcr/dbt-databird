@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: store_performance
+    description: "Performance globale des magasins"
+    columns:
+      - name: store_id
+        description: "Identifiant du magasin"
+        tests:
+          - unique
+          - not_null
+      
+      - name: total_revenue
+        description: "Chiffre d'affaires total"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
