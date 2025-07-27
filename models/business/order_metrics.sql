@@ -1,11 +1,9 @@
 SELECT
-  
-  store_name,
-  count(order_id) as orders_count
-  
+    s.store_name,
+    COUNT(distinct o.order_id) as orders_count
 
-FROM {{ ref('int_orders') }} as o
-join {{ ref('int_stores') }} as s
-on o.store_id = s.store_id
+FROM {{ ref('int_stores') }} as s
+LEFT JOIN {{ ref('int_orders') }} as o
+    ON s.store_id = o.store_id
 
-group by store_name
+GROUP BY s.store_name

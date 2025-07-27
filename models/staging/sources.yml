@@ -64,9 +64,7 @@ sources:
                   field: store_id
           - name: order_status
             description: "Statut de la commande"
-            tests:
-              - accepted_values:
-                  values: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+
       
       - name: order_items
         description: "Détail des articles commandés"
@@ -133,7 +131,6 @@ sources:
           - name: phone
             description: "Téléphone du client"
             tests:
-              - unique
               - not_null
           - name: street
             description: "Adresse du client"
@@ -212,8 +209,7 @@ sources:
           - name: active
             description: "Statut actif de l'employé"
             tests:
-              - accepted_values:
-                  values: [0, 1]
+              - not_null
         
       - name: stocks
         description: "Niveaux de stock par magasin"

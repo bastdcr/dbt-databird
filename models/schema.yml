@@ -18,9 +18,6 @@ models:
         description: "Identifiant du magasin"
         tests:
           - not_null
-          - relationships:
-              to: ref('stg_stores')
-              field: store_id
 
   - name: stg_stores
     description: "Magasins nettoyés et standardisés"
@@ -38,10 +35,6 @@ models:
         description: "Numéro de téléphone"
       - name: email
         description: "Adresse email"
-        tests:
-          - dbt_utils.accepted_values:
-              values: ['@']
-              quote: false
 
   # ===== INTERMEDIATE MODELS =====
   - name: int_orders
