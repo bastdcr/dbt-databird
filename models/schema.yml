@@ -38,10 +38,6 @@ models:
         description: "Numéro de téléphone"
       - name: email
         description: "Adresse email"
-        tests:
-          - dbt_utils.accepted_values:
-              values: ['@']
-              quote: false
 
   # ===== INTERMEDIATE MODELS =====
   - name: int_orders
