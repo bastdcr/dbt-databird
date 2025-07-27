@@ -5,3 +5,4 @@ select
     coalesce(order_date, required_date) as order_date,
     store_id
 from {{ ref('stg_orders') }}
+WHERE order_id is not null

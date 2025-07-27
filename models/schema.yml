@@ -1,18 +1,82 @@
 version: 2
 
 models:
-  - name: store_performance
-    description: "Performance globale des magasins"
+  # ===== STAGING MODELS =====
+  - name: stg_orders
+    description: "Commandes nettoyées et standardisées"
     columns:
-      - name: store_id
-        description: "Identifiant du magasin"
+      - name: order_id
+        description: "Identifiant unique de la commande"
         tests:
           - unique
           - not_null
-      
-      - name: total_revenue
-        description: "Chiffre d'affaires total"
+      - name: customer_id
+        description: "Identifiant du client"
         tests:
           - not_null
-          - dbt_utils.accepted_range:
-              min_value: 0
+      - name: store_id
+        description: "Identifiant du magasin"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_stores')
+              field: store_id
+
+  - name: stg_stores
+    description: "Magasins nettoyés et standardisés"
+    columns:
+      - name: store_id
+        description: "Identifiant unique du magasin"
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Nom du magasin"
+        tests:
+          - not_null
+      - name: phone
+        description: "Numéro de téléphone"
+      - name: email
+        description: "Adresse email"
+        tests:
+          - dbt_utils.accepted_values:
+              values: ['@']
+              quote: false
+
+  # ===== INTERMEDIATE MODELS =====
+  - name: int_orders
+    description: "Commandes avec informations enrichies"
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        description: "Identifiant du magasin"
+        tests:
+          - not_null
+
+  - name: int_stores
+    description: "Magasins avec métriques calculées"
+    columns:
+      - name: store_id
+        description: "Identifiant unique du magasin"
+        tests:
+          - unique
+          - not_null
+
+  # ===== BUSINESS MODELS =====
+  - name: order_metrics
+    description: "Métriques des commandes par magasin"
+    columns:
+      - name: store_name
+        description: "Nom du magasin"
+        tests:
+          - not_null
+          - unique
+      - name: orders_count
+        description: "Nombre total de commandes"
+        tests:
+          - not_null
+          - orders_count >= 0
