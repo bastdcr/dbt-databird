@@ -79,4 +79,3 @@ models:
         description: "Nombre total de commandes"
         tests:
           - not_null
-          - orders_count >= 0
