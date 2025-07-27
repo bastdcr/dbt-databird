@@ -43,6 +43,18 @@ sources:
             description: "Date de la commande"
             tests:
               - not_null
+          - name: required_date
+            description: "Date de la commande"
+            tests:
+              - not_null
+          - name: shipped_date
+            description: "Date d'envoi la commande"
+            tests:
+              - not_null
+          - name: staff_id
+            description: "Identifiant du vendeur"
+            tests:
+              - not_null
           - name: store_id
             description: "Identifiant du magasin"
             tests:
@@ -118,10 +130,19 @@ sources:
             tests:
               - unique
               - not_null
+          - name: phone
+            description: "Téléphone du client"
+            tests:
+              - unique
+              - not_null
+          - name: street
+            description: "Adresse du client"
           - name: city
             description: "Ville du client"
           - name: state
             description: "État/Province du client"
+          - name: zip_code
+            description: "Code postal du client"
         
       - name: products
         description: "Catalogue produits"
