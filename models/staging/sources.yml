@@ -10,7 +10,7 @@ sources:
     description: "Base de données Local Bike - Système de gestion de magasins de vélos"
     tables:
       - name: stores
-        description: "Magasins Local Bike"
+        description: "Magasins LocalBike"
         columns:
           - name: store_id
             description: "Identifiant unique du magasin"
