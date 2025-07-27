@@ -3,8 +3,5 @@ select
     store_name,
     phone,
     email,
-    street,
-    city,
-    state,
-    zip_code
-from {{ source('localBike', 'stores') }}
+    concat(street," ",city," ",state," ",zip_code) as full_adress
+from {{ ref('stg_stores') }}
