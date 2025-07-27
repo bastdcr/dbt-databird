@@ -2,6 +2,9 @@ version: 2
 
 sources:
   - name: localBike
+    config:
+      freshness:
+        warn_after: {count: 1, period: day}
     database: databird-462909
     schema: localBike
     description: "Base de données Local Bike - Système de gestion de magasins de vélos"
